@@ -5,7 +5,8 @@ module Lita
   module Handlers
     # Handle the VRT Mess requests for the Lita.io bot
     class VrtMess < Handler
-      route(/mess/, :handle_mess, command: true)
+      help = { 'mess' => 'Show menu from ishetlekkerindemess.be.' }
+      route(/mess/, :handle_mess, command: true, help: help)
 
       def handle_mess(response)
         response.reply(getmenu)
