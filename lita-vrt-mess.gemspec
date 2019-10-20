@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'lita-vrt-mess'
-  spec.version       = '0.1.0'
+  spec.version       = '0.1.1'
   spec.authors       = ['Stefan Goethals']
   spec.email         = ['stefan.goethals@vrt.be']
   spec.description   = 'Lita.io handler for getting the Menu of the VRT mess'
