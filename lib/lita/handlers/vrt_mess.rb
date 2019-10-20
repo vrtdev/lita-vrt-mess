@@ -33,8 +33,9 @@ module Lita
           cells.each_with_index do |d, i|
             result << "#{header[i]} : #{d.text}"
           end
-          result << '--------------------------'
+          result << '--------------------------' unless result.empty?
         end
+        result = ['Geen menu gevonden :('] if result.empty?
         result.join("\n")
       end
 
@@ -46,6 +47,7 @@ module Lita
           name = item.css('h3 img')[0]['alt']
           result << "#{name} : #{item.text.strip}"
         end
+        result = ['Geen menu gevonden :('] if result.empty?
         result.join("\n")
       end
 
