@@ -6,13 +6,39 @@ module Lita
     # Handle the VRT Mess requests for the Lita.io bot
     class VrtMess < Handler
       help = { 'mess' => 'Show menu from ishetlekkerindemess.be.' }
-      route(/mess/, :handle_mess, command: true, help: help)
+      route(/mess(.|$)+?(?<w>week)?/, :handle_mess, command: true, help: help)
 
       def handle_mess(response)
-        response.reply(getmenu)
+        week = response.match_data[:w]
+        if week == 'week'
+          response.reply(weekmenu)
+        else
+          response.reply(daymenu)
+        end
       end
 
-      def getmenu
+      def weekmenu
+        header = []
+        result = []
+        menu = parse_menu 'week'
+        table = menu.at('table')
+        table.search('tr').each do |tr|
+          cells = tr.search('th')
+          cells.each do |d|
+            header << d.text
+          end
+        end
+        table.search('tr').each do |tr|
+          cells = tr.search('td')
+          cells.each_with_index do |d, i|
+            result << "#{header[i]} : #{d.text}"
+          end
+          result << '--------------------------'
+        end
+        result.join("\n")
+      end
+
+      def daymenu
         result = []
         menu = parse_menu
         items = menu.css('div.item')
@@ -23,8 +49,8 @@ module Lita
         result.join("\n")
       end
 
-      def parse_menu
-        menu = HTTParty.get('http://ishetlekkerindemess.be')
+      def parse_menu(page = '')
+        menu = HTTParty.get("http://ishetlekkerindemess.be/#{page}")
         Nokogiri::HTML(menu)
       end
 

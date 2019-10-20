@@ -8,4 +8,9 @@ describe Lita::Handlers::VrtMess, lita_handler: true do
     send_command('mess')
     expect(replies.first).to include('Soep : ')
   end
+
+  it 'returns the VRT Mess weekmenu' do
+    send_command('mess week')
+    expect(replies.first).to include('Datum : ')
+  end
 end
