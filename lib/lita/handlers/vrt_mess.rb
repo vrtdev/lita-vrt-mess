@@ -35,7 +35,7 @@ module Lita
           end
           result << '--------------------------' unless result.empty?
         end
-        result = ['Geen menu gevonden :('] if result.empty?
+        result = ['Geen menu gevonden :(', 'Kijk eens op https://rto365.sharepoint.com/sites/MijnEten'] if result.empty?
         result.join("\n")
       end
 
@@ -47,7 +47,7 @@ module Lita
           name = item.css('h3 img')[0]['alt']
           result << "#{name} : #{item.text.strip}"
         end
-        result = ['Geen menu gevonden :('] if result.empty?
+        result = ['Geen menu gevonden :(', 'Kijk eens op https://rto365.sharepoint.com/sites/MijnEten'] if result.empty?
         result.join("\n")
       end
 
