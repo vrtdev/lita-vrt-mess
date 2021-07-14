@@ -1,6 +1,8 @@
 require 'httparty'
 require 'nokogiri'
 
+require 'json'
+
 module Lita
   module Handlers
     # Handle the VRT Mess requests for the Lita.io bot
@@ -18,21 +20,10 @@ module Lita
       end
 
       def weekmenu
-        header = []
         result = []
-        menu = parse_menu 'week'
-        table = menu.at('table')
-        table.search('tr').each do |tr|
-          cells = tr.search('th')
-          cells.each do |d|
-            header << d.text
-          end
-        end
-        table.search('tr').each do |tr|
-          cells = tr.search('td')
-          cells.each_with_index do |d, i|
-            result << "#{header[i]} : #{d.text}"
-          end
+        menus = fetch_menu 'week'
+        menus.each do |menu|
+          result << format_day(menu)
           result << '--------------------------' unless result.empty?
         end
         result = ['Geen menu gevonden :(', 'Kijk eens op https://rto365.sharepoint.com/sites/MijnEten'] if result.empty?
@@ -40,20 +31,30 @@ module Lita
       end
 
       def daymenu
-        result = []
-        menu = parse_menu
-        items = menu.css('div.item')
-        items.each do |item|
-          name = item.css('h3 img')[0]['alt']
-          result << "#{name} : #{item.text.strip}"
-        end
+        menu = fetch_menu
+        result = format_day(menu)
         result = ['Geen menu gevonden :(', 'Kijk eens op https://rto365.sharepoint.com/sites/MijnEten'] if result.empty?
         result.join("\n")
       end
 
-      def parse_menu(page = '')
-        menu = HTTParty.get("http://ishetlekkerindemess.be/#{page}")
-        Nokogiri::HTML(menu)
+      def format_day(menu)
+        result = []
+        date = menu.delete(:date)
+        return result if menu.empty?
+        result << "Menu voor #{date}"
+        menu.each do |name, value|
+          value.strip!
+          value = "geen #{name.downcase} :(" if value.empty?
+          result << "#{name}: #{value}"
+        end
+        result
+      end
+
+      def fetch_menu(page = '')
+        page = HTTParty.get("http://ishetlekkerindemess.be/#{page}")
+        json = Nokogiri::HTML(page).css('script#__NEXT_DATA__').text
+        menu = JSON.parse(json, symbolize_names: true)
+        menu[:props][:pageProps][:initialData]
       end
 
       Lita.register_handler(self)
