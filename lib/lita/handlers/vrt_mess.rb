@@ -1,6 +1,8 @@
 require 'httparty'
 require 'nokogiri'
 
+require 'json'
+
 module Lita
   module Handlers
     # Handle the VRT Mess requests for the Lita.io bot
@@ -20,7 +22,7 @@ module Lita
       def weekmenu
         header = []
         result = []
-        menu = parse_menu 'week'
+        menu = fetch_menu 'week'
         table = menu.at('table')
         table.search('tr').each do |tr|
           cells = tr.search('th')
@@ -41,17 +43,20 @@ module Lita
 
       def daymenu
         result = []
-        menu = parse_menu
-        items = menu.css('div.item')
-        items.each do |item|
-          name = item.css('h3 img')[0]['alt']
-          result << "#{name} : #{item.text.strip}"
+        menupage = fetch_menu
+        json = menupage.css('script#__NEXT_DATA__').text
+        menu = JSON.parse(json, symbolize_names: true)
+        items = menu[:props][:pageProps][:initialData]
+        date = items.delete(:date)
+        result << "Menu voor #{date}"
+        items.each do |name, value|
+          result << "#{name}: #{value}"
         end
         result = ['Geen menu gevonden :(', 'Kijk eens op https://rto365.sharepoint.com/sites/MijnEten'] if result.empty?
         result.join("\n")
       end
 
-      def parse_menu(page = '')
+      def fetch_menu(page = '')
         menu = HTTParty.get("http://ishetlekkerindemess.be/#{page}")
         Nokogiri::HTML(menu)
       end
