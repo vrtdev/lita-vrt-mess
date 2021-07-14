@@ -12,12 +12,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Deprecated
 
-## [0.1.1] - 2019-10-1920
+## [0.2.0] - 2021-07-1920
+### Changed
+- Use JSON included in ishetlekkerindemess.be instead of parsing HTML.
+
+### Added
+- Add fallback url in output when menu is not found.
+- Add placeholders for unavailable menu items.
+
+## [0.1.1] - 2019-10-20
 ### Added
 - Changelog file (this file)
 - Handle the case when there is no menu.
 
-## [0.1.0] - 2019-10-1920
+## [0.1.0] - 2019-10-20
 ### Added
 - First release
 

@@ -1,8 +1,8 @@
 Gem::Specification.new do |spec|
   spec.name          = 'lita-vrt-mess'
-  spec.version       = '0.1.1'
-  spec.authors       = ['Stefan Goethals']
-  spec.email         = ['stefan.goethals@vrt.be']
+  spec.version       = '0.2.0'
+  spec.authors       = ['Stefan Goethals', 'Joris Vandermeersch']
+  spec.email         = ['stefan.goethals@vrt.be', "joris.vandermeersch@vrt.be"]
   spec.description   = 'Lita.io handler for getting the Menu of the VRT mess'
   spec.summary       = 'Lita.io handler for getting the Menu of the VRT mess'
   spec.homepage      = 'http://vrt.be'
