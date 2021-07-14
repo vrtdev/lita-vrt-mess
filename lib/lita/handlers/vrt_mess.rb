@@ -43,6 +43,8 @@ module Lita
         return result if menu.empty?
         result << "Menu voor #{date}"
         menu.each do |name, value|
+          value.strip!
+          value = "geen #{name.downcase} :(" if value.empty?
           result << "#{name}: #{value}"
         end
         result
