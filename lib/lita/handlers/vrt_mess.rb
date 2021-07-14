@@ -20,21 +20,10 @@ module Lita
       end
 
       def weekmenu
-        header = []
         result = []
-        menu = fetch_menu 'week'
-        table = menu.at('table')
-        table.search('tr').each do |tr|
-          cells = tr.search('th')
-          cells.each do |d|
-            header << d.text
-          end
-        end
-        table.search('tr').each do |tr|
-          cells = tr.search('td')
-          cells.each_with_index do |d, i|
-            result << "#{header[i]} : #{d.text}"
-          end
+        menus = fetch_menu 'week'
+        menus.each do |menu|
+          result << format_day(menu)
           result << '--------------------------' unless result.empty?
         end
         result = ['Geen menu gevonden :(', 'Kijk eens op https://rto365.sharepoint.com/sites/MijnEten'] if result.empty?
